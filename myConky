@@ -1,0 +1,118 @@
+##################################################
+#
+# Thanks to
+#  - MX-Linux (MX-geekytowerLogo and MX-CoreBlue)
+#  - https://github.com/sak96/todo.conky
+#
+##################################################
+
+
+########## Settings ##########
+
+own_window yes
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+double_buffer yes
+
+alignment middle_right
+gap_x 20
+gap_y 0
+
+maximum_width 270
+
+draw_shades no
+draw_outline no
+draw_borders no
+stippled_borders 0
+border_width 1
+
+use_xft yes
+xftfont Droid Sans:size=10
+xftalpha 0.8
+text_buffer_size 2048
+override_utf8_locale yes
+
+update_interval 5
+
+times_in_seconds true
+
+default_color e0e0ef # White
+color1 0ab0f0        # Blue
+color2 0a7           # Green
+color3 fbdc33        # Yellow
+color4 f02030        # Red
+
+cpu_avg_samples 2
+net_avg_samples 2
+
+# Subtract (file system) buffers from used memory
+no_buffers yes
+
+
+########## Output ##########
+
+TEXT
+
+${alignc}${font Radio Space:size=32}${time %I:%M}${font}
+
+${voffset 7}${font Radio Space:size=16}${color1}${time %A}${font}$color${font Radio Space:size=38}${goto 150}${voffset -8} ${time %e}${font}
+${font Radio Space:size=18}${voffset -30}${time %b}${font}${voffset -3} ${font Radio Space:size=20}${time %Y}${voffset 2}${font}${color1} ${hr 1}${color}
+
+${color1}Paris${color}${alignr}${font Radio Space:size=16}${voffset -5}${tztime Europe/Paris %H:%M}${font}
+
+${if_existing /home/<ENTER_PROPER_NAME_HERE>/.conky/myConky/todo.txt}${color3}――――――[     TO DO${alignr}]――――――${color}
+${voffset -5}${font :size=6}
+
+${font}${execp cat -n $HOME/.conky/myConky/todo.txt | sed -e 's/^ *//' | sed -e 's/	/ /' | sed -e 's/^\(.\) \b\(.\)/\1 \u\2/g' | fmt -s -w 29 | sed -e 's/^\([0-9]\) /${font}${color3}\1${color} ${voffset -1}${font Poiret One:weight=Light:size=20}/g'}${font}
+
+${endif}
+${color1}――――――[    SYSTEM${alignr}]――――――
+${voffset -5}${color}${font :size=6}
+
+${font}${color1}CPU${color}        ${cpu cpu0} %${alignr}${color1}${cpubar cpu0 7,60}${color}${font :size=6}
+
+${font}${color1}RAM${color}       ${memperc} %${alignr}${color1}${membar 7,60}${color}${font :size=6}
+
+${font}${color1}Swap${color}     ${swapperc} % ${color1}/ ${swapmax}${alignr}${swapbar 7,60}${color}${font :size=6}
+
+${font}${color1}Core${color}${alignr}${hwmon 2 temp 1} °C${font :size=6}
+
+${font}${color1}ACPI${color}${alignr}${exec echo "$(cat /sys/class/thermal/thermal_zone8/temp) / 1000" | bc}${color} °C${font :size=6}
+
+${font}${color1}Uptime${color}${alignr}${format_time ${uptime_short} "\hh \mm"}
+
+
+${color1}――――――[     MEDIA${alignr}]――――――
+${voffset -5}${color}${font :size=6}
+
+${font} ${color1}/${color}         ${fs_used /} ${color1}/ ${fs_size /}${alignr}${fs_bar 7,60 /}${color}${font :size=6}
+
+${font}${color1}~${color}        ${fs_used /home} ${color1}/ ${fs_size /home}${alignr}${fs_bar 7,60 /home}${color}
+
+
+${color1}―[    WIRELESS -${color} ${addr wlan0}${alignr}${color1}]―
+${voffset -5}${color}${font :size=6}
+
+${font}${color1}↓${color}  ${downspeedf wlan0} KiB/s${alignr}${upspeedf wlan0} KiB/s  ${color1}↑${color}
+${color1}${downspeedgraph wlan0 25,120 000000 000000}  ${alignr}${upspeedgraph wlan0 25,120 000000 000000}${color}
+
+
+${color1}――――――[  MONITOR${alignr}]――――――
+${voffset -5}${color}${font :size=6}
+
+${font}${color1}NAME${alignr}PID    CPU${color}
+${top name 1}${alignr}${top pid 1} ${top cpu 1}
+${top name 2}${alignr}${top pid 2} ${top cpu 2}
+${top name 3}${alignr}${top pid 3} ${top cpu 3}
+${top name 4}${alignr}${top pid 4} ${top cpu 4}
+${top name 5}${alignr}${top pid 5} ${top cpu 5}
+
+${if_match ${battery_percent} <= 5}${color4}${else}${color1}${endif}
+――――――[   BATTERY${alignr}]――――――
+${voffset -5}${font :size=6}
+${if_match ${battery_percent} <= 5}${color4}${else}${color}${endif}
+${font}${battery_percent} %   ${exec cat /sys/class/power_supply/BAT0/status} \
+${alignr}${format_time ${battery_time} "\hh \mm"}${font :size=3}
+
+${font}${if_match ${battery_percent} == 100}${color2}${else}${if_match ${battery_percent} > 10}${color1}${else}${if_match ${battery_percent} > 5}${color3}${else}${color4}${endif}${endif}${endif}${battery_bar 7}${color}
