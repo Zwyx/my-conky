@@ -1,0 +1,2 @@
+# myConky
+My Conky configuration
