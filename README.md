@@ -19,6 +19,11 @@ Copy the content of this repository into `~/.conky/myConky/`.
 
 In line `64` of the `~/.conky/myConky/myConky` file, replace `<ENTER_PROPER_NAME_HERE>` by your session name, so the path `/home/<ENTER_PROPER_NAME_HERE>/.conky/myConky/todo.txt` becomes correct. You cannot use `~` or `$HOME` in this particular path.
 
+Make `todo.sh` executable:
+```
+chmod u+x ~/.conky/myConky/todo.sh
+```
+
 Use Conky Manager to set your new Conky configuration, or start it with
 ```
 conky -c ~/.conky/myConky/myConky
